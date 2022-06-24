@@ -20,7 +20,10 @@ test("GroupBy", () => {
       { id: "3", category: "b" },
     ],
   });
-  assert.equal(groupBy(values, (value) => value.category), expected);
+  assert.equal(
+    groupBy(values, (value) => value.category),
+    expected
+  );
 });
 
 test("GroupByToMap", () => {
@@ -46,7 +49,66 @@ test("GroupByToMap", () => {
       ],
     ],
   ]);
-  assert.equal(groupByToMap(values, (value) => value.category), expected);
+  assert.equal(
+    groupByToMap(values, (value) => value.category),
+    expected
+  );
+});
+
+test("GroupByMultiple", () => {
+  const values = [
+    { id: "1", categories: ["a", "c"] },
+    { id: "2", categories: ["b"] },
+    { id: "3", categories: ["b", "a"] },
+    { id: "4", categories: ["a"] },
+  ];
+  const expected = Object.assign(Object.create(null), {
+    a: [
+      { id: "1", categories: ["a", "c"] },
+      { id: "3", categories: ["b", "a"] },
+      { id: "4", categories: ["a"] },
+    ],
+    b: [
+      { id: "2", categories: ["b"] },
+      { id: "3", categories: ["b", "a"] },
+    ],
+    c: [{ id: "1", categories: ["a", "c"] }],
+  });
+  assert.equal(
+    groupBy(values, (value) => value.categories),
+    expected
+  );
+});
+
+test("GroupByMultipleToMap", () => {
+  const values = [
+    { id: "1", categories: ["a", "c"] },
+    { id: "2", categories: ["b"] },
+    { id: "3", categories: ["b", "a"] },
+    { id: "4", categories: ["a"] },
+  ];
+  const expected = new Map([
+    [
+      "a",
+      [
+        { id: "1", categories: ["a", "c"] },
+        { id: "3", categories: ["b", "a"] },
+        { id: "4", categories: ["a"] },
+      ],
+    ],
+    [
+      "b",
+      [
+        { id: "2", categories: ["b"] },
+        { id: "3", categories: ["b", "a"] },
+      ],
+    ],
+    ["c", [{ id: "1", categories: ["a", "c"] }]],
+  ]);
+  assert.equal(
+    groupByToMap(values, (value) => value.categories),
+    expected
+  );
 });
 
 test.run();
